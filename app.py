@@ -10,9 +10,12 @@ from PIL import Image
 import google.generativeai as genai
 
 # ── CONFIG ──────────────────────────────────────────────────────────────────
+# 👇 Set your Tesseract path (Windows default shown below)
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-API_KEY = "AIzaSyBHXZAg7_pB4iMHzVGbfMQ5L6p2FmHO61U"
+# 👇 Paste your Google Gemini API key here
+# Get a free key at: https://aistudio.google.com
+API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel("gemini-2.0-flash")
 
@@ -445,7 +448,6 @@ elif page == "📸 Screenshot OCR":
     st.caption("Upload any payment screenshot — Tesseract OCR reads it locally, no API needed!")
 
     col1, col2 = st.columns(2)
-
     with col1:
         st.markdown("#### 📤 Upload Screenshot")
         st.markdown("""
@@ -488,7 +490,6 @@ elif page == "📸 Screenshot OCR":
         if st.session_state.ocr_pending:
             pending = st.session_state.ocr_pending
             st.markdown('<div class="success-box">✅ OCR done! Review & confirm:</div>', unsafe_allow_html=True)
-
             confirmed_amount = st.number_input("Amount (₹)", value=float(pending["amount"]), step=1.0, min_value=0.0)
             cat_index = 0
             for i, c in enumerate(CATEGORIES):
@@ -505,17 +506,13 @@ elif page == "📸 Screenshot OCR":
             except:
                 default_date = date.today()
             confirmed_date = st.date_input("Date", value=default_date)
-
             col_a, col_b = st.columns(2)
             with col_a:
                 if st.button("✅ Add to Expenses", use_container_width=True):
                     if confirmed_amount > 0:
                         st.session_state.expenses.append({
-                            "amount": confirmed_amount,
-                            "category": confirmed_cat,
-                            "date": str(confirmed_date),
-                            "payment": confirmed_pay,
-                            "note": confirmed_note
+                            "amount": confirmed_amount, "category": confirmed_cat,
+                            "date": str(confirmed_date), "payment": confirmed_pay, "note": confirmed_note
                         })
                         st.session_state.ocr_pending = None
                         st.success("✅ Expense added!")
@@ -534,7 +531,6 @@ elif page == "📸 Screenshot OCR":
                 <p style="color:#9ca3af;">Tesseract OCR will read it locally on your PC</p>
             </div>
             """, unsafe_allow_html=True)
-
             st.markdown("---")
             st.markdown("#### 📱 Or Paste UPI/Bank SMS")
             sms_text = st.text_area("Paste your SMS here:", height=100,
@@ -598,7 +594,6 @@ elif page == "➕ Add Expense":
                 st.rerun()
         else:
             st.info("No expenses yet!")
-
     if st.session_state.expenses:
         st.markdown("---")
         st.markdown("#### 📋 All Expenses")
